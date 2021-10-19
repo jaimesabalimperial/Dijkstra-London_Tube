@@ -1,4 +1,9 @@
-from components import Station, Line, Connection
+import os, sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
+from tube.components import Station, Line, Connection
 import json
 
 
@@ -46,7 +51,7 @@ class TubeMap:
                 data = json.load(file)
 
         except FileNotFoundError:
-            return print("The filepath is invalid, none if the attributes of TubeMap() where updated.")
+            return print("The filepath is invalid, none of the attributes of TubeMap() where updated.")
         
         #retrieve data for stations, lines and connections
         stations = data["stations"]
@@ -77,7 +82,7 @@ class TubeMap:
 
 def test_import():
     tubemap = TubeMap()
-    tubemap.import_from_json("../data/london.json")
+    tubemap.import_from_json("data/london.json")
     
     # view one example Station
     print(tubemap.stations[list(tubemap.stations)[0]])

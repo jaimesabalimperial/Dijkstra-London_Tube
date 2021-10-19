@@ -1,3 +1,10 @@
+import os, sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+import json
+
+
 class NeighbourGraphBuilder:
     """
     Task 2: Complete the definition of the NeighbourGraphBuilder class by:
@@ -68,14 +75,35 @@ class NeighbourGraphBuilder:
 
         Note:
             If the input data (tubemap) is invalid, the method should return an empty dict.
+
         """
-        return dict()  # TODO: Complete this method
+        neighbour_graph = {}
+        for station_id in list(tubemap.stations.keys()): #loop over all stations
+            neighbour_graph[station_id] = {} #initialise dictionary
+
+            for connection in tubemap.connections: #loop over all connections for every station
+                connecting_stations_ids = [station.id for station in connection.stations] #identify the stations involved in each connection
+
+                #if connection involves the station were interested in, add connection to list
+                if station_id in connecting_stations_ids: 
+                    connecting_stations_ids.remove(station_id)
+                    neighbour_station = connecting_stations_ids[0]
+
+                    #if neighbour station id already exists, just append, otherwise make list
+                    if neighbour_station not in list(neighbour_graph[station_id].keys()): 
+                        neighbour_graph[station_id][neighbour_station] = [connection]
+                    else: 
+                        neighbour_graph[station_id][neighbour_station].append(connection)
+
+
+        return neighbour_graph
 
 
 def test_graph():
     from tube.map import TubeMap
+
     tubemap = TubeMap()
-    tubemap.import_from_json("data/london.json")
+    tubemap.import_from_json("../data/london.json")
 
     graph_builder = NeighbourGraphBuilder()
     graph = graph_builder.build(tubemap)
