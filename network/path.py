@@ -20,8 +20,18 @@ class PathFinder:
 
         graph_builder = NeighbourGraphBuilder()
         self.graph = graph_builder.build(self.tubemap)
-        
-        # Feel free to add anything else needed here.
+
+        self.stations_ids = list(self.graph.keys())
+        self.not_visited = set(station for station in self.stations_ids) #keep track of stations that have not been visited yet
+        self.predecessors = {} 
+        self.distances = {station:float("inf") for station in self.stations_ids}
+        self.station_names = [self.tubemap.stations[ident].name for ident in self.stations_ids]
+    
+    def name_to_id(self, station_name):
+
+        name_to_id = {name:ident for (name,ident) in zip(self.station_names, self.station_ids)} #make dictionary that maps station names to their ids
+
+        return name_to_id[station_name]
         
         
     def get_shortest_path(self, start_station_name, end_station_name):
@@ -51,6 +61,41 @@ class PathFinder:
                 shortest path from start_station_name to end_station_name.
                 Returns None if start_station_name or end_station_name does not exist.
         """
+        curr_station_id = self.name_to_id(start_station_name)
+
+        if start_station_name not in self.station_names or end_station_name not in self.station_names: #check for invalid start and end station names
+            return None
+
+        #if it is first time function is called, initialise the distance for the starting station to 0 
+        if len(self.not_visited) == len(self.station_ids): 
+            self.distances[curr_station_id] = 0
+
+        #if recursion ends --> starting station will be equal to end station and we can finally retrieve the path from the list of previous stations
+        if start_station_name == end_station_name:
+            pass
+
+        neighbours_list = list(self.graph[self.name_to_id(start_station_name)].keys()) #make list of neighbours for current station
+
+        #iterate over all neighbours and find distances
+        for neighbour in neighbours_list:
+            if neighbour in self.not_visited:
+                neighbour_connections = self.graph[curr_station_id][neighbour]
+
+                for connection in neighbour_connections:
+                    curr_shortest_distance = self.distances[neighbour]
+                    root_to_neighbour = self.distances[curr_station_id] + connection.time
+
+                    if root_to_neighbour < curr_shortest_distance:
+                        self.distances[neighbour] = root_to_neighbour
+                        self.predecessors[neighbour] = curr_station_id
+                    
+        self.not_visited.remove(curr_station_id) #remove current station from 'not visited' stations set
+
+        #find closest neighbour from current station using distances retrieved in for loop
+        
+
+        self.get_shortest_path(start_station_name, end_station_name)
+
         return []  # TODO
 
 

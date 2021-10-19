@@ -14,6 +14,21 @@ class NeighbourGraphBuilder:
     def __init__(self):
         pass
 
+    def extract_neighbour(self, station, connecting_stations):
+        """Returns the neighbour station from a list that contains the station were interested in.
+        
+        Args: 
+            station (str): id of station were interested in finding neighbouring stations for.
+            connecting_stations (list): list of length 2 that contains the station were interested in. 
+            
+        Returns: 
+            neighbour_station (str): id of neighbour station to the one were interested in."""
+
+        connecting_stations.remove(station)
+        neighbour_station = connecting_stations[0]
+
+        return neighbour_station
+
     def build(self, tubemap):
         """ Builds a graph encoding neighbouring connections between stations.
 
@@ -77,7 +92,12 @@ class NeighbourGraphBuilder:
             If the input data (tubemap) is invalid, the method should return an empty dict.
 
         """
+        ######################
+        #STILL HAVE TO ACCOUNT FOR INVALID INPUTS
+        ######################
+
         neighbour_graph = {}
+        # Time complexity O(n*m) --> could it be better?
         for station_id in list(tubemap.stations.keys()): #loop over all stations
             neighbour_graph[station_id] = {} #initialise dictionary
 
@@ -86,8 +106,7 @@ class NeighbourGraphBuilder:
 
                 #if connection involves the station were interested in, add connection to list
                 if station_id in connecting_stations_ids: 
-                    connecting_stations_ids.remove(station_id)
-                    neighbour_station = connecting_stations_ids[0]
+                    neighbour_station = self.extract_neighbour(station_id, connecting_stations_ids)
 
                     #if neighbour station id already exists, just append, otherwise make list
                     if neighbour_station not in list(neighbour_graph[station_id].keys()): 
