@@ -1,3 +1,7 @@
+from components import Station, Line, Connection
+import json
+
+
 class TubeMap:
     """
     Task 1: Complete the definition of the TubeMap class by:
@@ -13,6 +17,7 @@ class TubeMap:
         self.stations = {}  # key: id, value: Station
         self.lines = {}  # key: id, value: Line
         self.connections = []  # list of Connections
+
 
     def import_from_json(self, filepath):
         """ Import tube map information from a JSON file.
@@ -36,12 +41,43 @@ class TubeMap:
         Note:
             If the filepath is invalid, no attribute should be updated, and no error should be raised.
         """
-        return # TODO: Complete this method
+        try:
+            with open(filepath) as file:
+                data = json.load(file)
+
+        except FileNotFoundError:
+            return print("The filepath is invalid, none if the attributes of TubeMap() where updated.")
+        
+        #retrieve data for stations, lines and connections
+        stations = data["stations"]
+        lines = data["lines"]
+        connections = data["connections"] 
+
+        #make sets for the zones of each station and order them by their id's (keys) with Station() objects as their values
+        for station in stations:
+            station_zones = station["zone"]
+
+            #check if station is in one or two zones and make a set
+            if station_zones.isdigit():
+                station_zones = set([int(station["zone"])])
+            else: 
+                station_zones = set([int(float(station["zone"])), int(float(station["zone"])+1)])
+
+            self.stations[station["id"]] = Station(station["id"], station["name"], station_zones)
+
+        #order lines by their id's (keys) and make Line() objects as their values
+        for line in lines: 
+            self.lines[line["line"]] = Line(line["line"], line["name"])
+
+        #make set of stations for connections and append Connection() object to list
+        for connection in connections:
+            stations_set = set([self.stations[connection["station1"]], self.stations[connection["station2"]]])
+            self.connections.append(Connection(stations_set, self.lines[connection["line"]], int(connection["time"])))
 
 
 def test_import():
     tubemap = TubeMap()
-    tubemap.import_from_json("data/london.json")
+    tubemap.import_from_json("../data/london.json")
     
     # view one example Station
     print(tubemap.stations[list(tubemap.stations)[0]])
