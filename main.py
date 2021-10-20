@@ -13,15 +13,14 @@ def get_tubemap():
 
 
 def main():
-    #tubemap = get_tubemap()
+    tubemap = get_tubemap()
     
-    #path_finder = PathFinder(tubemap)
+    path_finder = PathFinder(tubemap)
 
-    test_shortest_path()
-    # Examples usage of path_finder
-    #stations = path_finder.get_shortest_path('Stockwell', 'Ealing Broadway')
-    #station_names = [station.name for station in stations]
-    #print(station_names)
+    #Examples usage of path_finder
+    stations = path_finder.get_shortest_path('Stockwell', 'Ealing Broadway')
+    station_names = [station.name for station in stations]
+    print(station_names)
 
 
 if __name__ == '__main__':
