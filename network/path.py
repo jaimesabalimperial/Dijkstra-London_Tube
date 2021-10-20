@@ -2,6 +2,7 @@ import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
+
 from network.graph import NeighbourGraphBuilder
 
 class PathFinder:
@@ -29,18 +30,39 @@ class PathFinder:
         self.station_names = [self.tubemap.stations[ident].name for ident in self.station_ids]
     
     def name_to_id(self, station_name):
-        """"""
+        """Retrieves the id of a station from its name.
+        Args: 
+            station_name (str): name of station for which the id must be extracted
+            
+        Returns: 
+            station_id (str): id of station with name station_name.
+        
+        """
         name_to_id = {name:ident for (name,ident) in zip(self.station_names, self.station_ids)} #make dictionary that maps station names to their ids
-        return name_to_id[station_name]
+        station_id = name_to_id[station_name]
+        return station_id 
     
     def id_to_name(self, station_id):
-        """"""
+        """Retrieves the name of a station from its id.
+        Args: 
+            station_id (str): id of station for which the name must be extracted
+            
+        Returns: 
+            station_name (str): name of station with id station_id.
+        """
         id_to_name = {ident:name for (name,ident) in zip(self.station_names, self.station_ids)} #make dictionary that maps station names to their ids
-        return id_to_name[station_id]
+        station_name = id_to_name[station_id]
+        return station_name
         
         
     def find_neighbour_distances(self, curr_station_id):
-        """"""
+        """Iterates through all previously unvisited neighbours of an input station and finds the total distance 
+        from the root node to the neighbour, updating the distances attribute of PathFinder() if it is the shortest 
+        one yet found in the iteration.
+        
+        Args: 
+            curr_station_id (str): id of the current station in path-finding recursion algorithm.        
+        """
         neighbours_list = list(self.graph[curr_station_id].keys()) #make list of neighbours for current station
         unvisited_neighbours = [neighbour for neighbour in neighbours_list if neighbour in self.not_visited] #retrieve neighbours that havent been visited
         
@@ -119,11 +141,11 @@ class PathFinder:
         self.not_visited.remove(curr_station_id) #remove current station from 'not visited' stations set
 
         #find closest neighbour from current station using distances retrieved in for loop
-        relevant_distances = {station:distance for (station, distance) in self.distances.items() if station in self.not_visited}
+        relevant_distances = {station:distance for (station, distance) in self.distances.items() if station in self.not_visited} #only interested in unvisited stations
         closest_neighbour = min(relevant_distances, key=self.distances.get) 
         closest_neighbour_name = self.id_to_name(closest_neighbour)
 
-        #use recursion to go through graph to find shortest path
+        #use recursion to go through graph and find shortest path
         return self.get_shortest_path(closest_neighbour_name, end_station_name)
 
 
@@ -134,7 +156,6 @@ def test_shortest_path():
     
     path_finder = PathFinder(tubemap)
     stations = path_finder.get_shortest_path("Covent Garden", "Green Park")
-    print(stations)
     
     station_names = [station.name for station in stations]
     expected = ["Covent Garden", "Leicester Square", "Piccadilly Circus", 

@@ -97,23 +97,27 @@ class NeighbourGraphBuilder:
         ######################
 
         neighbour_graph = {}
-        # Time complexity O(n*m) --> could it be better?
-        for station_id in list(tubemap.stations.keys()): #loop over all stations
-            neighbour_graph[station_id] = {} #initialise dictionary
+        try:
+            # Time complexity O(n*m) --> dont think there is much room for improvement
+            for station_id in list(tubemap.stations.keys()): #loop over all stations
+                neighbour_graph[station_id] = {} #initialise dictionary
 
-            for connection in tubemap.connections: #loop over all connections for every station
-                connecting_stations_ids = [station.id for station in connection.stations] #identify the stations involved in each connection
+                for connection in tubemap.connections: #loop over all connections for every station
+                    connecting_stations_ids = [station.id for station in connection.stations] #identify the stations involved in each connection
 
-                #if connection involves the station were interested in, add connection to list
-                if station_id in connecting_stations_ids: 
-                    neighbour_station = self.extract_neighbour(station_id, connecting_stations_ids)
+                    #if connection involves the station were interested in, add connection to list
+                    if station_id in connecting_stations_ids: 
+                        neighbour_station = self.extract_neighbour(station_id, connecting_stations_ids)
 
-                    #if neighbour station id already exists, just append, otherwise make list
-                    if neighbour_station not in list(neighbour_graph[station_id].keys()): 
-                        neighbour_graph[station_id][neighbour_station] = [connection]
-                    else: 
-                        neighbour_graph[station_id][neighbour_station].append(connection)
+                        #if neighbour station id already exists, just append, otherwise make list
+                        if neighbour_station not in list(neighbour_graph[station_id].keys()): 
+                            neighbour_graph[station_id][neighbour_station] = [connection]
+                        else:
+                            neighbour_graph[station_id][neighbour_station].append(connection)
 
+        #if error that indicates input isnt valid is raised, pass and return the empty neighbour_graoh dictionary
+        except TypeError or AttributeError or KeyError:
+            pass 
 
         return neighbour_graph
 
