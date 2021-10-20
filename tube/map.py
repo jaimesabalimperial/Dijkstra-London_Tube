@@ -82,7 +82,7 @@ class TubeMap:
 
 def test_import():
     tubemap = TubeMap()
-    tubemap.import_from_json("../data/london.json")
+    tubemap.import_from_json("data/london.json")
     
     # view one example Station
     print(tubemap.stations[list(tubemap.stations)[0]])

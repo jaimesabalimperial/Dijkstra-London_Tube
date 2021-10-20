@@ -122,7 +122,7 @@ def test_graph():
     from tube.map import TubeMap
 
     tubemap = TubeMap()
-    tubemap.import_from_json("../data/london.json")
+    tubemap.import_from_json("data/london.json")
 
     graph_builder = NeighbourGraphBuilder()
     graph = graph_builder.build(tubemap)
