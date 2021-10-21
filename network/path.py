@@ -134,7 +134,7 @@ class PathFinder:
                     finished = True
                 else: 
                     reversed_path.append(self.tubemap.stations[end_station_id])
-                    end_station_name = self.id_to_name(self.predecessors[end_station_id])
+                    end_station_name = self.id_to_name(self.predecessors[end_station_id]) #update to predecessor until start_station = end_station
             return reversed_path[::-1]
             
         self.find_neighbour_distances(curr_station_id) #updates self.distance to reflect distances from new node (station)

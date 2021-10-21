@@ -24,6 +24,5 @@ def main():
     station_names = [station.name for station in stations]
     print(station_names)
 
-
 if __name__ == '__main__':
     main()
