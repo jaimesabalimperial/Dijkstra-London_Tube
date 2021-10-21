@@ -1,5 +1,5 @@
 from network.path import PathFinder, test_shortest_path
-from tube.map import TubeMap
+from tube.map import TubeMap, test_import
 import sys
 
 def get_tubemap():
@@ -25,4 +25,5 @@ def main():
     print(station_names)
 
 if __name__ == '__main__':
+    test_import()
     main()
