@@ -2,7 +2,7 @@ import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
-import json
+from tube.map import TubeMap
 
 
 class NeighbourGraphBuilder:
@@ -92,12 +92,8 @@ class NeighbourGraphBuilder:
             If the input data (tubemap) is invalid, the method should return an empty dict.
 
         """
-        ######################
-        #STILL HAVE TO ACCOUNT FOR INVALID INPUTS
-        ######################
-
         neighbour_graph = {}
-        try:
+        if type(tubemap) == TubeMap: #check that input is valid
             # Time complexity O(n*m) --> dont think there is much room for improvement
             for station_id in list(tubemap.stations.keys()): #loop over all stations
                 neighbour_graph[station_id] = {} #initialise dictionary
@@ -114,10 +110,6 @@ class NeighbourGraphBuilder:
                             neighbour_graph[station_id][neighbour_station] = [connection]
                         else:
                             neighbour_graph[station_id][neighbour_station].append(connection)
-
-        #if error that indicates input isnt valid is raised, pass and return the empty neighbour_graoh dictionary
-        except TypeError or AttributeError or KeyError:
-            pass 
 
         return neighbour_graph
 
