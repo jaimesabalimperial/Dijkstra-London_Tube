@@ -25,5 +25,4 @@ def main():
     print(station_names)
 
 if __name__ == '__main__':
-    test_import()
     main()
