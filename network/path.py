@@ -142,7 +142,7 @@ class PathFinder:
 
         #find closest neighbour from current station using distances retrieved in for loop
         relevant_distances = {station:distance for (station, distance) in self.distances.items() if station in self.not_visited} #only interested in unvisited stations
-        closest_neighbour = min(relevant_distances, key=self.distances.get) 
+        closest_neighbour = min(relevant_distances, key=relevant_distances.get) 
         closest_neighbour_name = self.id_to_name(closest_neighbour)
 
         #use recursion to go through graph and find shortest path
