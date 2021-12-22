@@ -155,7 +155,7 @@ def test_shortest_path():
     tubemap.import_from_json("data/london.json")
     
     path_finder = PathFinder(tubemap)
-    stations = path_finder.get_shortest_path("Covent Garden", "Green Park")
+    stations = path_finder.get_shortest_path("Camden Town", "King's Cross St. Pancras")
     
     station_names = [station.name for station in stations]
     expected = ["Covent Garden", "Leicester Square", "Piccadilly Circus", 
